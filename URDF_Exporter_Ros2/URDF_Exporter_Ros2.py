@@ -1,7 +1,10 @@
-#Author-syuntoku14
-#Description-Generate URDF file from Fusion 360
+#Author-hyungjin-lee, Ara-go
+# Description-Generate URDF file from Fusion 360
 
-import adsk, adsk.core, adsk.fusion, traceback
+import adsk
+import adsk.core
+import adsk.fusion
+import traceback
 import os
 import sys
 from .utils import utils
@@ -17,6 +20,7 @@ from .core import Link, Joint, Write
 # supports "Revolute", "Rigid" and "Slider" joint types
 
 # I'm not sure how prismatic joint acts if there is no limit in fusion model
+
 
 def run(context):
     ui = None
@@ -47,8 +51,10 @@ def run(context):
             return 0
 
         save_dir = save_dir + '/' + package_name
-        try: os.mkdir(save_dir)
-        except: pass
+        try:
+            os.mkdir(save_dir)
+        except:
+            pass
 
         package_dir = os.path.abspath(os.path.dirname(__file__)) + '/package/'
 
@@ -75,17 +81,20 @@ def run(context):
 
         # --------------------
         # Generate URDF
-        Write.write_urdf(joints_dict, links_xyz_dict, inertial_dict, package_name, robot_name, save_dir)
-        Write.write_materials_xacro(joints_dict, links_xyz_dict, inertial_dict, package_name, robot_name, save_dir)
-        Write.write_transmissions_xacro(joints_dict, links_xyz_dict, inertial_dict, package_name, robot_name, save_dir)
-        Write.write_gazebo_xacro(joints_dict, links_xyz_dict, inertial_dict, package_name, robot_name, save_dir)
+        Write.write_urdf(joints_dict, links_xyz_dict,
+                         inertial_dict, package_name, robot_name, save_dir)
+        Write.write_materials_xacro(
+            joints_dict, links_xyz_dict, inertial_dict, package_name, robot_name, save_dir)
+        Write.write_transmissions_xacro(
+            joints_dict, links_xyz_dict, inertial_dict, package_name, robot_name, save_dir)
+        Write.write_gazebo_xacro(
+            joints_dict, links_xyz_dict, inertial_dict, package_name, robot_name, save_dir)
         Write.write_display_launch(package_name, robot_name, save_dir)
         Write.write_gazebo_launch(package_name, robot_name, save_dir)
 
         # copy over package files
         utils.create_package(package_name, save_dir, package_dir)
-        utils.update_setup_py(save_dir, package_name)
-        utils.update_setup_cfg(save_dir, package_name)
+        utils.update_CMakeLists_txt(save_dir, package_name)
         utils.update_package_xml(save_dir, package_name)
 
         # Generate STl files

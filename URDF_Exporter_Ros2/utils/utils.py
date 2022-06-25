@@ -5,13 +5,17 @@ Created on Sun May 12 19:15:34 2019
 @author: syuntoku
 """
 
-import adsk, adsk.core, adsk.fusion
-import os.path, re
+import adsk
+import adsk.core
+import adsk.fusion
+import os.path
+import re
 from xml.etree import ElementTree
 from xml.dom import minidom
 from distutils.dir_util import copy_tree
 import fileinput
 import sys
+
 
 def copy_occs(root):
     """
@@ -67,8 +71,10 @@ def export_stl(design, save_dir, components):
     # create a single exportManager instance
     exportMgr = design.exportManager
     # get the script location
-    try: os.mkdir(save_dir + '/meshes')
-    except: pass
+    try:
+        os.mkdir(save_dir + '/meshes')
+    except:
+        pass
     scriptDir = save_dir + '/meshes'
     # export the occurrence one by one in the component to a specified file
     for component in components:
@@ -79,14 +85,16 @@ def export_stl(design, save_dir, components):
                     print(occ.component.name)
                     fileName = scriptDir + "/" + occ.component.name
                     # create stl exportOptions
-                    stlExportOptions = exportMgr.createSTLExportOptions(occ, fileName)
+                    stlExportOptions = exportMgr.createSTLExportOptions(
+                        occ, fileName)
                     stlExportOptions.sendToPrintUtility = False
                     stlExportOptions.isBinaryFormat = True
                     # options are .MeshRefinementLow .MeshRefinementMedium .MeshRefinementHigh
                     stlExportOptions.meshRefinement = adsk.fusion.MeshRefinementSettings.MeshRefinementLow
                     exportMgr.execute(stlExportOptions)
                 except:
-                    print('Component ' + occ.component.name + 'has something wrong.')
+                    print('Component ' + occ.component.name +
+                          'has something wrong.')
 
 
 def file_dialog(ui):
@@ -124,8 +132,8 @@ def origin2center_of_mass(inertia, center_of_mass, mass):
     y = center_of_mass[1]
     z = center_of_mass[2]
     translation_matrix = [y**2+z**2, x**2+z**2, x**2+y**2,
-                         -x*y, -y*z, -x*z]
-    return [ round(i - mass*t, 6) for i, t in zip(inertia, translation_matrix)]
+                          -x*y, -y*z, -x*z]
+    return [round(i - mass*t, 6) for i, t in zip(inertia, translation_matrix)]
 
 
 def prettify(elem):
@@ -144,50 +152,44 @@ def prettify(elem):
     reparsed = minidom.parseString(rough_string)
     return reparsed.toprettyxml(indent="  ")
 
+
 def create_package(package_name, save_dir, package_dir):
-    try: os.mkdir(save_dir + '/launch')
-    except: pass
+    try:
+        os.mkdir(save_dir + '/launch')
+    except:
+        pass
 
-    try: os.mkdir(save_dir + '/urdf')
-    except: pass
+    try:
+        os.mkdir(save_dir + '/urdf')
+    except:
+        pass
 
-    try: os.mkdir(save_dir + '/config')
-    except: pass
+    try:
+        os.mkdir(save_dir + '/config')
+    except:
+        pass
 
-    try: os.mkdir(save_dir + '/' +package_name)
-    except: pass
+    try:
+        os.mkdir(save_dir + '/' + package_name)
+    except:
+        pass
     with open(os.path.join(save_dir, package_name, '__init__.py'), 'w'):
         pass
 
-    try: os.mkdir(save_dir + '/resource')
-    except: pass
+    try:
+        os.mkdir(save_dir + '/resource')
+    except:
+        pass
     with open(os.path.join(save_dir, 'resource', package_name), 'w'):
         pass
 
-    try: os.mkdir(save_dir + '/test')
-    except: pass
+    try:
+        os.mkdir(save_dir + '/test')
+    except:
+        pass
 
     copy_tree(package_dir, save_dir)
 
-def update_setup_py(save_dir, package_name):
-    file_name = save_dir + '/setup.py'
-
-    for line in fileinput.input(file_name, inplace=True):
-        if "package_name = 'fusion2urdf_ros2'" in line:
-            sys.stdout.write("package_name = '" + package_name + "'\n")
-        else:
-            sys.stdout.write(line)
-
-def update_setup_cfg(save_dir, package_name):
-    file_name = save_dir + '/setup.cfg'
-
-    for line in fileinput.input(file_name, inplace=True):
-        if "script-dir" in line:
-            sys.stdout.write("script-dir=$base/lib/" + package_name + "\n")
-        elif "install-scripts" in line:
-            sys.stdout.write("install-scripts=$base/lib/" + package_name + "\n")
-        else:
-            sys.stdout.write(line)
 
 def update_package_xml(save_dir, package_name):
     file_name = save_dir + '/package.xml'
@@ -196,6 +198,17 @@ def update_package_xml(save_dir, package_name):
         if '<name>' in line:
             sys.stdout.write("<name>" + package_name + "</name>\n")
         elif '<description>' in line:
-            sys.stdout.write("<description>The " + package_name + " package</description>\n")
+            sys.stdout.write("<description>The " +
+                             package_name + " package</description>\n")
+        else:
+            sys.stdout.write(line)
+
+
+def update_CMakeLists_txt(save_dir, package_name):
+    file_name = save_dir + '/setup.cfg'
+
+    for line in fileinput.input(file_name, inplace=True):
+        if "project" in line:
+            sys.stdout.write("project(" + package_name + ")\n")
         else:
             sys.stdout.write(line)
