@@ -1,7 +1,7 @@
 {
 	"autodeskProduct":	"Fusion360",
 	"type":	"script",
-	"author":	"syuntoku14",
+	"author":	"hyungjinLee, ara-Go",
 	"description":	{
 		"":	"Export stl and URDF file"
 	},
