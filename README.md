@@ -10,14 +10,14 @@ Run the following command in your shell.
 
 ```powershell
 cd <path to fusion2urdf-ros2>
-Copy-Item ".\URDF_Exporter_Ros2\" -Destination "${env:APPDATA}\Autodesk\Autodesk Fusion 360\API\Scripts\" -Recurse
+Copy-Item ".\URDF_Exporter_Ros2cpp\" -Destination "${env:APPDATA}\Autodesk\Autodesk Fusion 360\API\Scripts\" -Recurse
 ```
 
 ##### macOS (In bash or zsh)
 
 ```bash
 cd <path to fusion2urdf-ros2>
-cp -r ./URDF_Exporter_Ros2 "$HOME/Library/Application Support/Autodesk/Autodesk Fusion 360/API/Scripts/"
+cp -r ./URDF_Exporter_Ros2cpp "$HOME/Library/Application Support/Autodesk/Autodesk Fusion 360/API/Scripts/"
 ```
 ## What is this script?
 This is a fusion 360 script to export urdf from fusion 360 directly.
