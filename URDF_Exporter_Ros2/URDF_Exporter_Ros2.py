@@ -34,7 +34,7 @@ def run(context):
         ui = app.userInterface
         product = app.activeProduct
         design = adsk.fusion.Design.cast(product)
-        title = 'Fusion2URDF'
+        title = 'Fusion2URDF_ROS2cpp'
         if not design:
             ui.messageBox('No active Fusion design', title)
             return
