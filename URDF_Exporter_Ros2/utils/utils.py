@@ -175,7 +175,7 @@ def create_package(package_name, save_dir, package_dir):
         pass
 
     try:
-        os.mkdir(save_dir + '/launch' + '/' + package_name)
+        os.mkdir(save_dir + '/include' + '/' + package_name)
     except:
         pass
 
