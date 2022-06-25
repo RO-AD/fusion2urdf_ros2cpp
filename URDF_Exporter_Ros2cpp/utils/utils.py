@@ -173,7 +173,11 @@ def create_package(package_name, save_dir, package_dir):
         os.mkdir(save_dir + '/src')
     except:
         pass
-
+    try:
+        os.mkdir(save_dir + '/include')
+    except:
+        pass
+    
     try:
         os.mkdir(save_dir + '/include' + '/' + package_name)
     except:
