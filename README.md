@@ -9,14 +9,14 @@ Run the following command in your shell.
 ##### Windows (In PowerShell)
 
 ```powershell
-cd <path to fusion2urdf-ros2>
+cd <path to fusion2urdf-ros2cpp>
 Copy-Item ".\URDF_Exporter_Ros2cpp\" -Destination "${env:APPDATA}\Autodesk\Autodesk Fusion 360\API\Scripts\" -Recurse
 ```
 
 ##### macOS (In bash or zsh)
 
 ```bash
-cd <path to fusion2urdf-ros2>
+cd <path to fusion2urdf-ros2cpp>
 cp -r ./URDF_Exporter_Ros2cpp "$HOME/Library/Application Support/Autodesk/Autodesk Fusion 360/API/Scripts/"
 ```
 ## What is this script?
