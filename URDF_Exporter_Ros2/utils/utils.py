@@ -196,7 +196,7 @@ def update_package_xml(save_dir, package_name):
 
 
 def update_CMakeLists_txt(save_dir, package_name):
-    file_name = save_dir + '/setup.cfg'
+    file_name = save_dir + '/CMakeLists.txt'
 
     for line in fileinput.input(file_name, inplace=True):
         if "project" in line:
