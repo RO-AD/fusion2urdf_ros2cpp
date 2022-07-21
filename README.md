@@ -1,6 +1,20 @@
 # fusion2urdf ROS2_c++ package
 
 Inspired by [syuntoku14/fusion2urdf](https://github.com/syuntoku14/fusion2urdf) and [dheena2k2/fusion2urdf-ros2](https://github.com/dheena2k2/fusion2urdf-ros2), this repertoire is ADDIN, who converts it into a ROS2 c++ package and edited to export description package suited for ROS2 ament_cmake type build. Check out [syuntoku14/fusion2urdf](https://github.com/syuntoku14/fusion2urdf) for converting fusion360 model to robot description package of ROS1.
+## Difference
+* ROS2 C++ Package
+* Color  
+![image](https://user-images.githubusercontent.com/68213792/180215132-008cf195-fc48-4943-8203-af7aecdd7c0b.png)
+
+### rviz  
+![image](https://user-images.githubusercontent.com/68213792/180215308-a7656d41-46b1-470a-9b25-33fec6f86b2d.png)  
+  
+If you urdf conversion in xacro, it can be used in unity, omniverse  
+### Unity  
+![image](https://user-images.githubusercontent.com/68213792/180215772-2f648ed8-a74d-4b7f-9f4b-340f41c546c2.png)
+### Omniverse  
+![image](https://user-images.githubusercontent.com/68213792/180215935-dc1ff029-65ee-4e18-922e-01d2c5717a6a.png)
+
 
 ## Installation
 
