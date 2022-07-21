@@ -6,8 +6,9 @@ Created on Sun May 12 20:46:26 2019
 """
 
 import adsk, os
+import re
 from xml.etree.ElementTree import Element, SubElement
-from . import Link, Joint, launch_templates
+from . import Link, Joint, launch_templates, Material
 from ..utils import utils
 
 def write_link_urdf(joints_dict, repo, links_xyz_dict, file_name, inertial_dict):
@@ -34,26 +35,44 @@ def write_link_urdf(joints_dict, repo, links_xyz_dict, file_name, inertial_dict)
     The origin of the coordinate of center_of_mass is the coordinate of the link
     """
     with open(file_name, mode='a') as f:
+
         # for base_link
         center_of_mass = inertial_dict['base_link']['center_of_mass']
+        Material_name,color=Material.material('base_link')
+        Material_name = re.sub(" ","",str(Material_name))
         link = Link.Link(name='base_link', xyz=[0,0,0],
             center_of_mass=center_of_mass, repo=repo,
             mass=inertial_dict['base_link']['mass'],
-            inertia_tensor=inertial_dict['base_link']['inertia'])
+            inertia_tensor=inertial_dict['base_link']['inertia'],
+            material_name = Material_name
+            )
         links_xyz_dict[link.name] = link.xyz
         link.make_link_xml()
         f.write(link.link_xml)
         f.write('\n')
+        app = adsk.core.Application.get()
+        product = app.activeProduct
+        design  = adsk.fusion.Design.cast(product)
+        root = design.rootComponent
+        allOccs = root.occurrences
+        appearance_dict = {}
+        for occs in allOccs:
+            appearance_dict[str(occs.component.name)] = str(occs.component.material.appearance.name)
 
         # others
         for joint in joints_dict:
             name = joints_dict[joint]['child']
+            find_name = name[:-2]
+            if find_name in appearance_dict.keys():
+                appearance_name = appearance_dict.pop(name[:-2])
+                appearance_name = re.sub(" ","",appearance_name)
             center_of_mass = \
-                [ i-j for i, j in zip(inertial_dict[name]['center_of_mass'], joints_dict[joint]['xyz'])]
+            [ i-j for i, j in zip(inertial_dict[name]['center_of_mass'], joints_dict[joint]['xyz'])]
             link = Link.Link(name=name, xyz=joints_dict[joint]['xyz'],\
                 center_of_mass=center_of_mass,\
                 repo=repo, mass=inertial_dict[name]['mass'],\
-                inertia_tensor=inertial_dict[name]['inertia'])
+                inertia_tensor=inertial_dict[name]['inertia'],
+                material_name=appearance_name)
             links_xyz_dict[link.name] = link.xyz
             link.make_link_xml()
             f.write(link.link_xml)
@@ -148,9 +167,21 @@ def write_materials_xacro(joints_dict, links_xyz_dict, inertial_dict, package_na
         f.write('<?xml version="1.0" ?>\n')
         f.write('<robot name="{}" xmlns:xacro="http://www.ros.org/wiki/xacro" >\n'.format(robot_name))
         f.write('\n')
-        f.write('<material name="silver">\n')
-        f.write('  <color rgba="0.700 0.700 0.700 1.000"/>\n')
-        f.write('</material>\n')
+        app = adsk.core.Application.get()
+        product = app.activeProduct
+        design  = adsk.fusion.Design.cast(product)
+        root = design.rootComponent
+        allOccs = root.occurrences
+        result = []
+        for occs in allOccs:
+            com_name = occs.component.name
+            material_name, color = Material.material(com_name)
+            if str(material_name) not in result:
+                result.append(str(material_name))
+                material_name = re.sub(" ","",material_name)
+                f.write('  <material name="{}">\n'.format(material_name))
+                f.write('    <color rgba="{}"/>\n'.format(color))
+                f.write('  </material>\n')
         f.write('\n')
         f.write('</robot>\n')
 

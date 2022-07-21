@@ -11,7 +11,7 @@ from ..utils import utils
 
 class Link:
 
-    def __init__(self, name, xyz, center_of_mass, repo, mass, inertia_tensor):
+    def __init__(self, name, xyz, center_of_mass, repo, mass, inertia_tensor,material_name):
         """
         Parameters
         ----------
@@ -41,6 +41,7 @@ class Link:
         self.remain_repo_addr = repo[len(self.pkg_name):]
         self.mass = mass
         self.inertia_tensor = inertia_tensor
+        self.material_name = material_name
         
     def make_link_xml(self):
         """
@@ -70,7 +71,7 @@ class Link:
         mesh_v = SubElement(geometry_v, 'mesh')
         mesh_v.attrib = {'filename':'file://' + '$(find %s)' % self.pkg_name + self.remain_repo_addr + self.name + '.stl','scale':'0.001 0.001 0.001'}
         material = SubElement(visual, 'material')
-        material.attrib = {'name':'silver'}
+        material.attrib = {'name': self.material_name}
         
         # collision
         collision = SubElement(link, 'collision')

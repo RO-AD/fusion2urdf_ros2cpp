@@ -27,6 +27,9 @@ find_package(joint_state_publisher_gui REQUIRED)
 
 install(DIRECTORY
   launch
+  meshes
+  urdf
+  config
   DESTINATION share/${PROJECT_NAME}/
   )
 
