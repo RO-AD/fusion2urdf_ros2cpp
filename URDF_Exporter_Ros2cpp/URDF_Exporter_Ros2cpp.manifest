@@ -1,0 +1,10 @@
+{
+	"autodeskProduct":	"Fusion360",
+	"type":	"script",
+	"author":	"Leehyungjin",
+	"description":	{
+		"Fusion360":	"ros2 c++ package"
+	},
+	"supportedOS":	"windows|mac",
+	"editEnabled":	true
+}
